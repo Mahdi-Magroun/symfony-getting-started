@@ -38,7 +38,7 @@ class Farm
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="myfarm", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $owner;
 

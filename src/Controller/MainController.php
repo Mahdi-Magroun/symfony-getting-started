@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Entity\Farm;
+use App\Entity\Product;
+use App\Entity\User;
+use App\Form\ProductType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends AbstractController
 
@@ -26,9 +30,9 @@ class MainController extends AbstractController
      /**
      * @Route("/app/farmer", name="farmer")
      */
-    public function Farmerindex()
+    public function Farmerindex(RequestStack $requestStack,ManagerRegistry $doctrine)
     {
-       
+     
         return  new Response("<h1> index for farmer man<h1>"); 
     }
 
@@ -45,16 +49,16 @@ class MainController extends AbstractController
 
     // all about farmer 
      /**
-     * @Route("/app/farmer/products", name="farmer/products")
+     * @Route("/app/farmer/{id}/products", name="farmer/products")
      */
-    public function FarmerProducts(ManagerRegistry $doctrine )
+    public function FarmerProducts(ManagerRegistry $doctrine,int $id)
     {
         $entityManager=$doctrine->getManager();
-        $farm=$doctrine->getRepository(Farm::class)->find(3);
+        $farm=$doctrine->getRepository(Farm::class)->find($id);
         $products=$farm->getProducts();
 
        
-        return  new Response("<h1>in this farm there is".count($products)." product</h1>"); 
+        return $this->render("farmer/viewProducts.html.twig",['products'=>$products]); 
     }
 
      /**
@@ -77,11 +81,32 @@ class MainController extends AbstractController
 
 
      /**
-     * @Route("/app/farmer/products/add", name="farmer/products/add")
+     * @Route("/app/farmer/{id}/products/add", name="farmer/products/add")
      */
-    public function FarmerAddProducts(ManagerRegistry $doctrine )
+    public function FarmerAddProducts(ManagerRegistry $doctrine,Request $request ,int $id)
     {
-        $entityManager = $doctrine->getManager();
+        // use product id for the moment but when you make the login put haja okhra cuzz it's not secure 
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product, [
+            //'action' => $this->generateUrl('farmer/products/add'),
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $doctrine->getManager();
+            $product = $form->getData();
+            $farm=$doctrine->getRepository(Farm::class)->find($id);
+            $product->setFarm($farm);
+            $entityManager->persist($product);
+             $entityManager->flush();
+
+        }
+      
+        
+        
+        return $this->renderForm("form/addProduct.html.twig",["form"=>$form]);
+
+       /* $entityManager = $doctrine->getManager();
         $farm=$doctrine->getRepository(Farm::class)->find(3);
         $product = new Product();
         $product->setFarm($farm);
@@ -94,7 +119,7 @@ class MainController extends AbstractController
         $entityManager->persist($product);
 
         // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
+        $entityManager->flush();*/
        
         return  new Response("<h1> product aded succesfully <h1>"); 
     }
@@ -181,15 +206,32 @@ class MainController extends AbstractController
 
 
 
+ /**
+     * @Route("/app/farmer/login", name="login")
+     */
+    public function index(RequestStack $requestStack,ManagerRegistry $doctrine): Response
+    {
+        $request=Request::createFromGlobals();
+        if($request->get('usermail')!=null && $request->get("userpassword")!=null){
+            $entityManager=$doctrine->getManager();
+            $user=null;
+            $user=$entityManager->getRepository(User::class)->findOneBy(['email' =>$request->get('usermail'),'password' =>$request->get('userpassword') ]);
+            if($user!=null)
+            {
+                $session =$requestStack->getSession();
+                $session->set('user',['email'=>$request->get('usermail'),'password'=>$request->get('userpassword')]);
+                return $this->redirectToRoute('farmer');
+            }
+            
+        }
+
+        return $this->render("\login\login.html.twig",[]);
+    }
 
 
+   
 
 
-
-
-
-
-
-
+    
 
 }

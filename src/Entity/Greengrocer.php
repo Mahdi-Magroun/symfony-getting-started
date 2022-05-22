@@ -31,9 +31,9 @@ class Greengrocer
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="greengrocer", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $owner;
+    private $owner_id;
 
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="greengrocer")
