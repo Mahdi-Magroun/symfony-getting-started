@@ -58,7 +58,7 @@ class MainController extends AbstractController
         $products=$farm->getProducts();
 
        
-        return $this->render("farmer/viewProducts.html.twig",['products'=>$products]); 
+        return $this->render("farmer/viewProducts.html.twig",['products'=>$products,'id'=>$id]); 
     }
 
      /**
@@ -99,6 +99,7 @@ class MainController extends AbstractController
             $product->setFarm($farm);
             $entityManager->persist($product);
              $entityManager->flush();
+             return $this->redirectToRoute("farmer/products",['id'=>$id]);
 
         }
       
@@ -106,42 +107,44 @@ class MainController extends AbstractController
         
         return $this->renderForm("form/addProduct.html.twig",["form"=>$form]);
 
-       /* $entityManager = $doctrine->getManager();
-        $farm=$doctrine->getRepository(Farm::class)->find(3);
-        $product = new Product();
-        $product->setFarm($farm);
-        $product->setProductName('tomato 2');
-        $product->setProductDiscription('fresh tomato 2');
-        $product->setPrice(2.5);
-        $product->setQuantity(4000);
-
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($product);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();*/
        
-        return  new Response("<h1> product aded succesfully <h1>"); 
     }
 
 
      /**
-     * @Route("/app/farmer/products/delete", name="farmer/products/delete")
+     * @Route("/app/farmer/{id}/products/{idProd}/delete", name="farmer/products/delete")
      */
-    public function FarmerDeleteProduct()
+    public function FarmerDeleteProduct(ManagerRegistry $doctrine,int $id ,int $idProd)
     {
+        $product=$doctrine->getRepository(Product::class)->find($idProd);
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($product);
+        $entityManager->flush();
+        return $this->redirectToRoute("farmer/products",['id'=>$id]);
+
        
-        return  new Response("<h1>  delete product <h1>"); 
+       
     }
     
 
      /**
-     * @Route("/app/farmer/products/modify", name="farmer/products/modify")
+     * @Route("/app/farmer/{id}/products/{idProd}/modify", name="farmer/products/modify")
      */
-    public function FarmerModify()
+    public function FarmerModify(ManagerRegistry $doctrine,int $id ,int $idProd,Request $request)
     {
-       
-        return  new Response("<h1> modify <h1>"); 
+        $entityManager = $doctrine->getManager();
+        $product=$entityManager->getRepository(Product::class)->find($idProd);
+        $form = $this->createForm(ProductType::class, $product, [
+            
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute("farmer/products",['id'=>$id]);
+
+        }
+        return  $this->renderForm("form/updateProduct.html.twig",['form'=>$form]);
     }
 
 
