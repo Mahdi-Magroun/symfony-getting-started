@@ -146,7 +146,7 @@ class Farm
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setFarmer($this);
+            $order->setFarm($this);
         }
 
         return $this;
@@ -156,8 +156,8 @@ class Farm
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getFarmer() === $this) {
-                $order->setFarmer(null);
+            if ($order->getFarm() === $this) {
+                $order->setFarm(null);
             }
         }
 

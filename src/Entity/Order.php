@@ -24,7 +24,7 @@ class Order
      * @ORM\ManyToOne(targetEntity=Farm::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $farmer;
+    private $farm;
 
     /**
      * @ORM\ManyToOne(targetEntity=Greengrocer::class, inversedBy="orders")
@@ -33,9 +33,14 @@ class Order
     private $greengrocer;
 
     /**
-     * @ORM\OneToMany(targetEntity=Items::class, mappedBy="ordor")
+     * @ORM\OneToMany(targetEntity=Items::class, mappedBy="ordor",cascade={"persist", "remove"})
      */
     private $items;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $status;
 
     public function __construct()
     {
@@ -47,14 +52,14 @@ class Order
         return $this->id;
     }
 
-    public function getFarmer(): ?Farm
+    public function getFarm(): ?Farm
     {
-        return $this->farmer;
+        return $this->farm;
     }
 
-    public function setFarmer(?Farm $farmer): self
+    public function setFarm(?Farm $farmer): self
     {
-        $this->farmer = $farmer;
+        $this->farm = $farmer;
 
         return $this;
     }
@@ -97,6 +102,18 @@ class Order
                 $item->setOrdor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
