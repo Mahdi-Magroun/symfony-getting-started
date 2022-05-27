@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Service\deleveryService;
 use App\Entity\Farm;
 use App\Entity\Order;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,50 +26,25 @@ class DeleveryController extends AbstractController
 
 
      /**
-     * @Route("/app/delevery/{id}/order", name="delevery/order")
+     * @Route("/app/delevery/order", name="delevery/order")
      */
-    public function DeleveryOrder(ManagerRegistry $doctrine,int $id )
+    public function DeleveryOrder(deleveryService $deleveryService)
     {
-        $entityManager=$doctrine->getManager();
-        $order=$entityManager->getRepository(Order::class)->findBy(['status'=>'order','isDelivered'=>false]);
-        $farmsId=array();
-        for($i=0;$i<count($order);$i++){
-            array_push($farmsId,$order[$i]->getFarm()->getId());
-        }
-        $farmsId=array_unique($farmsId,SORT_NUMERIC);
-        $farmsId=array_values($farmsId);    
-        $Orderfarms=array();
-        
-        for($i=0;$i<count($farmsId);$i++){
-            $qq=array();
-             for ($j=0; $j <count($order) ; $j++) { 
-                if($order[$j]->getFarm()->getId()==$farmsId[$i]){
-                    $poid=0;
-                    foreach ($order[$j]->getItems() as $item) {
-                       $poid=$poid+$item->getQuantite();
-                    }
-                array_push($qq,['order'=>$order[$j],'weight'=>$poid]);
-                }
-             }
-             array_push($Orderfarms,['orders'=>$qq,'farm'=>$qq[0]['order']->getFarm()]);
-            
-        }
-      
-       
-        return $this->render('delevery/order.html.twig',['farms'=>$Orderfarms,'id'=>$id]);
+ 
+        return $this->render('delevery/order.html.twig',['farms'=>$deleveryService->getAllOrders()]);
     }
 
      /**
-     * @Route("/app/delevery/{id}/order/markDelivred/{idOrder}", name="delevery/order/markDelivred")
+     * @Route("/app/delevery/order/markDelivred/{idOrder}", name="delevery/order/markDelivred")
      */
-    public function DeleveryOrderMarkDelivred(ManagerRegistry $doctrine,int $id,$idOrder)
+    public function DeleveryOrderMarkDelivred(ManagerRegistry $doctrine,$idOrder)
     {
         $entityManager=$doctrine->getManager();
         $order=$entityManager->getRepository(Order::class)->find($idOrder);
         $order->setIsDelivered(true);
          $entityManager->persist($order);
          $entityManager->flush();
-         return $this->redirectToRoute('delevery/order',['id'=>$id]);
+         return $this->redirectToRoute('delevery/order');
        
     }
 

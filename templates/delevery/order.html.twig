@@ -1,6 +1,4 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
- 
+{% extends "main/baseDelevery.html.twig" %}
 {% block body %}
 
 
@@ -39,7 +37,7 @@
       <td>{{ od.weight}} kg</td>
       {% if od.order.isIsPrepared %}  
       <td><p class="text-success">Prepared</p></td>
-      <td><a class="btn btn-primary" href="{{path("delevery/order/markDelivred",{'id':id,'idOrder':od.order.getId() })}}"> mark delivred  </a></td>
+      <td><a class="btn btn-primary" href="{{path("delevery/order/markDelivred",{'idOrder':od.order.getId() })}}"> mark delivred  </a></td>
         {% else %}
         <td><p class="text-danger">Not prepared</p></td>
         <td><a class="btn btn-danger" href=""> prepare quickly  </a></td>

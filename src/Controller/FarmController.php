@@ -7,6 +7,7 @@ use App\Entity\Items;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Service\FarmService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +17,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FarmController extends AbstractController
-{ /**
+{ 
+    private $farmService;
+    public function __construct(FarmService $farmService)
+    {
+        $this->farmService= $farmService;
+    }
+    
+    /**
     * @Route("/app/farmer", name="farmer")
     */
-   public function Farmerindex(RequestStack $requestStack,ManagerRegistry $doctrine)
+   public function Farmerindex()
    {
     
        return  new Response("<h1> index for farmer man<h1>"); 
@@ -29,28 +37,20 @@ class FarmController extends AbstractController
     /**
     * @Route("/app/farmer/products", name="farmer/products")
     */
-   public function FarmerProducts(ManagerRegistry $doctrine)
+   public function FarmerProducts()
    {
-       
-       $entityManager=$doctrine->getManager();
-       $farm=$doctrine->getRepository(Farm::class)->findOneBy(['owner'=>$this->getUser()]);
-       
-       return $this->render("farmer/viewProducts.html.twig",['farm'=>$farm]); 
+    return $this->render("farmer/viewProducts.html.twig",['farm'=>$this->farmService->getCurentFarm()]); 
    }
 
 
    /**
-    * @Route("/app/farmer/{id}/orderNotPrepared", name="farmer/orderNotPrepared")
+    * @Route("/app/farmer/orderNotPrepared", name="farmer/orderNotPrepared")
     */
-   public function FarmerOrderNotPrepared(ManagerRegistry $doctrine,int $id)
+   public function FarmerOrderNotPrepared(ManagerRegistry $doctrine)
    {
-       $entityManager=$doctrine->getManager();
-       $farm=$doctrine->getRepository(Farm::class)->find($id);
-      
-       $order=$doctrine->getRepository(Order::class)->findBy(['farm'=>$farm,'isPrepared'=>false]);
       
       
-     return $this->render("farmer/orderNotPrepared.html.twig",['orders'=>$order,'id'=>$id]); 
+     return $this->render("farmer/orderNotPrepared.html.twig",['orders'=>$this->farmService->getNonPreparedOrder()]); 
    }
 
 
@@ -58,21 +58,17 @@ class FarmController extends AbstractController
    
 
    /**
-    * @Route("/app/farmer/{id}/markPrepared/{idOrder}/{to}", name="farmer/markPrepared")
+    * @Route("/app/farmer/markPrepared/{idOrder}/{to}", name="farmer/markPrepared")
     */
-    public function FarmerOrderMarkPrepared(ManagerRegistry $doctrine,int $id,int $idOrder,int $to)
+    public function FarmerOrderMarkPrepared(int $idOrder,int $to)
     {
-        $entityManager=$doctrine->getManager();
-       
-        $order=$doctrine->getRepository(Order::class)->find($idOrder);
-        $order->setIsPrepared(true); 
-        $entityManager->persist($order);
-        $entityManager->flush();
+        $this->farmService->markOrderAsPrepared($idOrder);
+        
        if($to==0){
-        return $this->redirectToRoute("farmer/orderNotPrepared",['id'=>$id]); 
+        return $this->redirectToRoute("farmer/orderNotPrepared"); 
        }
        elseif ($to==1){
-        return $this->redirectToRoute("farmer/order",['id'=>$id]); 
+        return $this->redirectToRoute("farmer/order"); 
        }
      
     }
@@ -83,28 +79,21 @@ class FarmController extends AbstractController
 
 
     /**
-    * @Route("/app/farmer/{id}/order", name="farmer/order")
+    * @Route("/app/farmer/order", name="farmer/order")
     */
-   public function FarmerOrder(ManagerRegistry $doctrine,int $id)
+   public function FarmerOrder(ManagerRegistry $doctrine)
    {
-    $entityManager=$doctrine->getManager();
-    $farm=$doctrine->getRepository(Farm::class)->find($id);
-   
-    $order=$doctrine->getRepository(Order::class)->findBy(['farm'=>$farm,'isDelivered'=>false]);
-    return $this->render("farmer/allOrder.html.twig",['orders'=>$order,'id'=>$id]); 
+    return $this->render("farmer/allOrder.html.twig",['orders'=>$this->farmService->getAllFarmOrder()]); 
    }
 
 
     /**
-    * @Route("/app/farmer/{id}/delivredOrder", name="farmer/delivredOrder")
+    * @Route("/app/farmer/delivredOrder", name="farmer/delivredOrder")
     */
-    public function FarmerDlivredOrder(ManagerRegistry $doctrine,int $id)
+    public function FarmerDlivredOrder(ManagerRegistry $doctrine)
     {
-     $entityManager=$doctrine->getManager();
-     $farm=$doctrine->getRepository(Farm::class)->find($id);
-    
-     $order=$doctrine->getRepository(Order::class)->findBy(['farm'=>$farm,'isDelivered'=>true]);
-     return $this->render("farmer/viewRecentOrder.html.twig",['orders'=>$order,'id'=>$id]); 
+     return $this->render("farmer/viewRecentOrder.html.twig",['orders'=>$this->farmService->getDelivredOrders()
+    ]); 
     }
 
 
@@ -158,10 +147,7 @@ class FarmController extends AbstractController
     */
    public function FarmerDeleteProduct(ManagerRegistry $doctrine,int $idProd)
    {
-       $product=$doctrine->getRepository(Product::class)->find($idProd);
-       $entityManager = $doctrine->getManager();
-       $entityManager->remove($product);
-       $entityManager->flush();
+       $this->farmService->deleteProduct($idProd);
        return $this->redirectToRoute("farmer/products");    
    }
    

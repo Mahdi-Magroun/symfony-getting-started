@@ -19,13 +19,13 @@ class Items
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $product;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="items")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $ordor;
 

@@ -22,13 +22,13 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity=Farm::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $farm;
 
     /**
      * @ORM\ManyToOne(targetEntity=Greengrocer::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $greengrocer;
 

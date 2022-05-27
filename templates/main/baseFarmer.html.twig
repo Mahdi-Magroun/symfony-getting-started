@@ -32,17 +32,24 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ path("greengrocer/farms") }}">farms</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{path("greengrocer/mycard")}}">shoping card</a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                     manage products 
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <li><a class="dropdown-item" href="{{path("farmer/products")}}"> my products </a></li>
+                      <li><a class="dropdown-item" href="{{path("farmer/products/add")}}"> add product </a></li>
+                    </ul>
                   </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       manage order
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <li><a class="dropdown-item" href="{{path("greengrocer/myorder")}}"> non delivred orders</a></li>
-                      <li><a class="dropdown-item" href="#"> delivred orders</a></li>
-                      <li><a class="dropdown-item" href="#">old orders</a></li>
+                        <li><a class="dropdown-item" href="{{path("farmer/order")}}">curent order </a></li>
+                      <li><a class="dropdown-item" href="{{path("farmer/delivredOrder")}}"> delivred orders</a></li>
+                      <li><a class="dropdown-item" href="{{path("farmer/orderNotPrepared")}}"> not prepared</a></li>
+                   
                     </ul>
                   </li>
                 </ul>

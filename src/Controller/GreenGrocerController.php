@@ -171,13 +171,12 @@ class GreenGrocerController extends AbstractController
 
 
     /**
-     * @Route("/app/greengrocer/{idGreen}/recentOrder", name="greengrocer/recentOrder")
+     * @Route("/app/greengrocer/recentOrder", name="greengrocer/recentOrder")
      */
-    public function GreenGrocerRecentOrder(ManagerRegistry $doctrine,int $idGreen){
+    public function GreenGrocerRecentOrder(ManagerRegistry $doctrine){
     
      $entityManager=$doctrine->getManager();
-     $greenGrocer=$doctrine->getRepository(Greengrocer::class)->find($idGreen);
-    
+     $greenGrocer=$entityManager->getRepository(Greengrocer::class)->findOneBy(['owner_id'=>$this->getUser()->getId()]);      
      $order=$doctrine->getRepository(Order::class)->findBy(['greengrocer'=>$greenGrocer,'isDelivered'=>true]);
      return $this->render("greengrocer/viewRecentOrder.html.twig",['orders'=>$order]); 
     
