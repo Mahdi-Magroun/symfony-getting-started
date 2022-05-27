@@ -23,15 +23,15 @@
     </tr>
   </thead>
   <tbody>
-   {% for p in products %}
+   {% for p in farm.getProducts() %}
     <tr>
       <th scope="row">{{ p.getId() }}</th>
       <td>{{ p.getProductName() }}</td>
       <td>{{ p.getPrice() }}</td>
       <td>{{ p.getProductDiscription()}}</td>
       <td>{{ p.getQuantity()}}</td>
-      <td><a class="btn btn-danger" href="{{ path("farmer/products/delete" ,{'id':id,'idProd':p.getId()} ) }}">Supprimer </a>
-      <a class="btn btn-primary" href="{{ path("farmer/products/modify",{'id':id,'idProd':p.getId()}) }}">  Detail</a></td>
+      <td><a class="btn btn-danger" href="{{ path("farmer/products/delete" ,{'idProd':p.getId()} ) }}">Supprimer </a>
+      <a class="btn btn-primary" href="{{ path("farmer/products/modify",{'idProd':p.getId()}) }}">  Detail</a></td>
       
     </tr>
      {% endfor %}

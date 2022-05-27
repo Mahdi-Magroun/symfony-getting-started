@@ -42,6 +42,27 @@ class Order
      */
     private $status;
 
+    
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDelivered;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPrepared;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $should_delevered_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $delivred_at;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -114,6 +135,54 @@ class Order
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getShouldDeleveredAt(): ?\DateTimeInterface
+    {
+        return $this->should_delevered_at;
+    }
+
+    public function setShouldDeleveredAt(\DateTimeInterface $should_delevered_at): self
+    {
+        $this->should_delevered_at = $should_delevered_at;
+
+        return $this;
+    }
+
+    public function isIsDelivered(): ?bool
+    {
+        return $this->isDelivered;
+    }
+
+    public function setIsDelivered(bool $isDelivered): self
+    {
+        $this->isDelivered = $isDelivered;
+
+        return $this;
+    }
+
+    public function isIsPrepared(): ?bool
+    {
+        return $this->isPrepared;
+    }
+
+    public function setIsPrepared(bool $isPrepared): self
+    {
+        $this->isPrepared = $isPrepared;
+
+        return $this;
+    }
+
+    public function getDelivredAt(): ?\DateTimeInterface
+    {
+        return $this->delivred_at;
+    }
+
+    public function setDelivredAt(?\DateTimeInterface $delivred_at): self
+    {
+        $this->delivred_at = $delivred_at;
 
         return $this;
     }

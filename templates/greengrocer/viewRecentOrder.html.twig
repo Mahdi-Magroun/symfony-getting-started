@@ -7,7 +7,7 @@
 
 {% for od in orders %}
 
-<h2>{{ od.getFarm().getFarmName() }}</h2>
+<h2>order</h2>
 
   <table class="table table-striped ">
   <thead>
@@ -16,8 +16,7 @@
       <th scope="col">product</th>
       <th scope="col">quantity</th>
       <th scope="col">kilo price </th>
-      <th scope="col">total price</th>
-       <th scope="col">Actions</th>
+      
       
     </tr>
   </thead>
@@ -28,13 +27,14 @@
       <td>{{ item.getProduct().getProductName()}}</td>
       <td>{{ item.getQuantite() }}</td>
       <td>{{ item.getProduct().getPrice()}}</td>
-      <td>{{ item.getPrice()}}</td>
+      
       
     </tr>
      {% endfor %}
-
+     
       </tbody>
 </table>
+
 <br><br><br>
 {% endfor %}
 

@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Farm;
+use App\Entity\Order;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DeleveryController extends AbstractController
 {
@@ -23,19 +26,51 @@ class DeleveryController extends AbstractController
 
 
      /**
-     * @Route("/app/delevery/order", name="delevery/order")
+     * @Route("/app/delevery/{id}/order", name="delevery/order")
      */
-    public function DeleveryOrder()
+    public function DeleveryOrder(ManagerRegistry $doctrine,int $id )
     {
-        return new Response("<h1>delevery order<h1>");
+        $entityManager=$doctrine->getManager();
+        $order=$entityManager->getRepository(Order::class)->findBy(['status'=>'order','isDelivered'=>false]);
+        $farmsId=array();
+        for($i=0;$i<count($order);$i++){
+            array_push($farmsId,$order[$i]->getFarm()->getId());
+        }
+        $farmsId=array_unique($farmsId,SORT_NUMERIC);
+        $farmsId=array_values($farmsId);    
+        $Orderfarms=array();
+        
+        for($i=0;$i<count($farmsId);$i++){
+            $qq=array();
+             for ($j=0; $j <count($order) ; $j++) { 
+                if($order[$j]->getFarm()->getId()==$farmsId[$i]){
+                    $poid=0;
+                    foreach ($order[$j]->getItems() as $item) {
+                       $poid=$poid+$item->getQuantite();
+                    }
+                array_push($qq,['order'=>$order[$j],'weight'=>$poid]);
+                }
+             }
+             array_push($Orderfarms,['orders'=>$qq,'farm'=>$qq[0]['order']->getFarm()]);
+            
+        }
+      
+       
+        return $this->render('delevery/order.html.twig',['farms'=>$Orderfarms,'id'=>$id]);
     }
 
      /**
-     * @Route("/app/delevery/order/detail", name="delevery/order/detail")
+     * @Route("/app/delevery/{id}/order/markDelivred/{idOrder}", name="delevery/order/markDelivred")
      */
-    public function DeleveryOrderDetail()
+    public function DeleveryOrderMarkDelivred(ManagerRegistry $doctrine,int $id,$idOrder)
     {
-        return new Response("<h1>delevery order detail <h1>");
+        $entityManager=$doctrine->getManager();
+        $order=$entityManager->getRepository(Order::class)->find($idOrder);
+        $order->setIsDelivered(true);
+         $entityManager->persist($order);
+         $entityManager->flush();
+         return $this->redirectToRoute('delevery/order',['id'=>$id]);
+       
     }
 
      /**

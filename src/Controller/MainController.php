@@ -27,27 +27,7 @@ class MainController extends AbstractController
 
 
 
- /**
-     * @Route("/app/farmer/login", name="login")
-     */
-    public function index(RequestStack $requestStack,ManagerRegistry $doctrine): Response
-    {
-        $request=Request::createFromGlobals();
-        if($request->get('usermail')!=null && $request->get("userpassword")!=null){
-            $entityManager=$doctrine->getManager();
-            $user=null;
-            $user=$entityManager->getRepository(User::class)->findOneBy(['email' =>$request->get('usermail'),'password' =>$request->get('userpassword') ]);
-            if($user!=null)
-            {
-                $session =$requestStack->getSession();
-                $session->set('user',['email'=>$request->get('usermail'),'password'=>$request->get('userpassword')]);
-                return $this->redirectToRoute('farmer');
-            }
-            
-        }
-
-        return $this->render("\login\login.html.twig",[]);
-    }
+ 
 
 
    

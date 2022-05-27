@@ -12,23 +12,26 @@ class ProductFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
          //$entityManager=$doctrine->getManager();
-        $farm=$manager->getRepository(Farm::class)->find(3);
+        $farm=$manager->getRepository(Farm::class)->findAll();
+       foreach ($farm as $farms) {
+            # code...
        
-       /* for($i=0;$i<30;$i++){
+       for($i=0;$i<30;$i++){
             $product = new Product();
-            $product->setFarm($farm);
+            $product->setFarm($farms);
             $product->setPrice(100+$i);
             $product->setQuantity(1000+$i);
             $product->setProductName("product ".$i);
             $product->setProductDiscription("product discription ".$i);
             $manager->persist($product);
             
-        // $manager->persist($product);
+         $manager->persist($product);
 
         
         }
+     }
          $manager->flush();
-         */
+         
     }
     }
 

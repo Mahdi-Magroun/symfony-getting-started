@@ -3,26 +3,35 @@
 namespace App\DataFixtures;
 
 use App\Entity\Farm;
+use App\Entity\Greengrocer;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixture extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    private $hasher;
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->hasher=$userPasswordHasher;
+        
+    }
+    public function load(ObjectManager $manager ): void
     {
       
-       
+      /* 
         for($i=2;$i<10;$i++){
             $user = new User();
-            $user->setEmail("farmer".$i."@gmail.com");
-            $user->setPassword("password".$i);
-            $user->setRoles(['ROLE'=>'FARMER']);
+            $user->setEmail("greengrocer".$i."@gmail.com");
+            $user->setPassword($this->hasher->hashPassword(
+                $user,"0101"));
+            $user->setRoles(['ROLE_GREENGROCER']);
             $manager->persist($user);
-            $farm=new Farm();
-            $farm->setOwner($user);
-            $farm->setFarmName('farm '.$i);
-            $farm->setLoacation('location '.$i);
+            $farm=new Greengrocer();
+            $farm->setOwnerId($user);
+            $farm->setGreengrocerName('greengrocer '.$i);
+            $farm->setLocation('location '.$i);
             
             
          $manager->persist($farm);
@@ -30,6 +39,6 @@ class UserFixture extends Fixture
         
         }
          $manager->flush();
-       
+     */  
     }
 }

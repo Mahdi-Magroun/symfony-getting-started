@@ -29,7 +29,7 @@
       <td>{{ f.getFarmName() }}</td>
       <td>{{ f.getLoacation() }}</td>
       <td>{{ f.getOwner().getUserName()}}</td>
-      <td><a class="btn btn-primary" href="{{ path("greengrocer/farms/products" ,{'idFarm':f.getId(),'idGreen':idGreen} ) }}">view products </a></td>
+      <td><a class="btn btn-primary" href="{{ path("greengrocer/farms/products" ,{'idFarm':f.getId()} ) }}">view products </a></td>
     </tr>
      {% endfor %}
 

@@ -18,20 +18,25 @@
       <th scope="col">NOM</th>
       <th scope="col">PRIX</th>
       <th scope="col">DESCRIPTION</th>
-      <th scope="col">Action</th>
+      <th scope="col">quantity</th>
+      <th scope="col">action</th>
       
       
     </tr>
   </thead>
   <tbody>
-   {% for p in products %}
+   {% for p in farms.getProducts() %}
     <tr>
       <th scope="row">{{ p.getId() }}</th>
       <td>{{ p.getProductName() }}</td>
       <td>{{ p.getPrice() }}</td>
       <td>{{ p.getProductDiscription()}}</td>
       <td>{{ p.getQuantity()}}</td>
-      <td><a class="btn btn-primary" href="{{ path("greengrocer/farms/products/tocard" ,{'idFarm':p.getFarm().getId(),'idProduct':p.getId(),'idGreen':idGreen} ) }}"> order  </a></td>
+      {% if p.getQuantity >0 %}
+      <td><a class="btn btn-primary" href="{{ path("greengrocer/farms/products/tocard" ,{'idFarm':p.getFarm().getId(),'idProduct':p.getId()} ) }}"> order  </a></td>
+      {% else %}
+      <td><p class="text-danger">no stock</p></td>
+      {% endif %}
       
     </tr>
      {% endfor %}
