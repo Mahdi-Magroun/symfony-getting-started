@@ -31,7 +31,7 @@ class Greengrocer
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="greengrocer", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true,onDelete="CASCADE")
      */
     private $owner_id;
 
@@ -40,9 +40,20 @@ class Greengrocer
      */
     private $orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GreengrocerPicture::class, mappedBy="greengrocer")
+     */
+    private $greengrocerPictures;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $discription;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->greengrocerPictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +123,48 @@ class Greengrocer
                 $order->setGreengrocer(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GreengrocerPicture>
+     */
+    public function getGreengrocerPictures(): Collection
+    {
+        return $this->greengrocerPictures;
+    }
+
+    public function addGreengrocerPicture(GreengrocerPicture $greengrocerPicture): self
+    {
+        if (!$this->greengrocerPictures->contains($greengrocerPicture)) {
+            $this->greengrocerPictures[] = $greengrocerPicture;
+            $greengrocerPicture->setGreengrocer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGreengrocerPicture(GreengrocerPicture $greengrocerPicture): self
+    {
+        if ($this->greengrocerPictures->removeElement($greengrocerPicture)) {
+            // set the owning side to null (unless already changed)
+            if ($greengrocerPicture->getGreengrocer() === $this) {
+                $greengrocerPicture->setGreengrocer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDiscription(): ?string
+    {
+        return $this->discription;
+    }
+
+    public function setDiscription(?string $discription): self
+    {
+        $this->discription = $discription;
 
         return $this;
     }

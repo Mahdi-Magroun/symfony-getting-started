@@ -32,26 +32,37 @@ class Farm
    
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="Farm")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="Farm", cascade={"persist", "remove"})
      */
     private $products;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="myfarm", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="myfarm", cascade={"persist","remove"})
+     * @ORM\JoinColumn(nullable=true,onDelete="CASCADE")
      */
     private $owner;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="farmer")
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="farm", cascade={"persist", "remove"})
      */
     private $orders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FarmPictures::class, mappedBy="farm", cascade={"persist", "remove"})
+     */
+    private $farmPictures;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $discription;
 
     public function __construct()
     
     {
         $this->products = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->farmPictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +171,48 @@ class Farm
                 $order->setFarm(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FarmPictures>
+     */
+    public function getFarmPictures(): Collection
+    {
+        return $this->farmPictures;
+    }
+
+    public function addFarmPicture(FarmPictures $farmPicture): self
+    {
+        if (!$this->farmPictures->contains($farmPicture)) {
+            $this->farmPictures[] = $farmPicture;
+            $farmPicture->setFarm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFarmPicture(FarmPictures $farmPicture): self
+    {
+        if ($this->farmPictures->removeElement($farmPicture)) {
+            // set the owning side to null (unless already changed)
+            if ($farmPicture->getFarm() === $this) {
+                $farmPicture->setFarm(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDiscription(): ?string
+    {
+        return $this->discription;
+    }
+
+    public function setDiscription(?string $discription): self
+    {
+        $this->discription = $discription;
 
         return $this;
     }

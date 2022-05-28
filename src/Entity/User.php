@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -25,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     private $roles = [];
 
@@ -44,6 +48,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToOne(targetEntity=Greengrocer::class, mappedBy="owner_id", cascade={"persist", "remove"})
      */
     private $greengrocer;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Account::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $account;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Prove::class, mappedBy="user",cascade={"persist", "remove"})
+     */
+    private $proves;
+
+    public function __construct()
+    {
+        $this->proves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -164,6 +183,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->greengrocer = $greengrocer;
+
+        return $this;
+    }
+
+    public function getAccount(): ?Account
+    {
+        return $this->account;
+    }
+
+    public function setAccount(Account $account): self
+    {
+        // set the owning side of the relation if necessary
+        if ($account->getUser() !== $this) {
+            $account->setUser($this);
+        }
+
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prove>
+     */
+    public function getProves(): Collection
+    {
+        return $this->proves;
+    }
+
+    public function addProve(Prove $prove): self
+    {
+        if (!$this->proves->contains($prove)) {
+            $this->proves[] = $prove;
+            $prove->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProve(Prove $prove): self
+    {
+        if ($this->proves->removeElement($prove)) {
+            // set the owning side to null (unless already changed)
+            if ($prove->getUser() === $this) {
+                $prove->setUser(null);
+            }
+        }
 
         return $this;
     }

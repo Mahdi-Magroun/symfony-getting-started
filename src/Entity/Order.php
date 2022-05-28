@@ -21,14 +21,14 @@ class Order
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Farm::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(targetEntity=Farm::class, inversedBy="orders",cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true,onDelete="CASCADE")
      */
     private $farm;
 
     /**
      * @ORM\ManyToOne(targetEntity=Greengrocer::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true,onDelete="CASCADE")
      */
     private $greengrocer;
 

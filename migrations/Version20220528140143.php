@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220524210454 extends AbstractMigration
+final class Version20220528140143 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,14 @@ final class Version20220524210454 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE `order` ADD should_delevered_at DATETIME NOT NULL, ADD is_delivered TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE farm DROP FOREIGN KEY FK_5816D0457E3C61F9');
+        $this->addSql('ALTER TABLE farm ADD CONSTRAINT FK_5816D0457E3C61F9 FOREIGN KEY (owner_id) REFERENCES user (id) ON DELETE CASCADE');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE `order` DROP should_delevered_at, DROP is_delivered');
+        $this->addSql('ALTER TABLE farm DROP FOREIGN KEY FK_5816D0457E3C61F9');
+        $this->addSql('ALTER TABLE farm ADD CONSTRAINT FK_5816D0457E3C61F9 FOREIGN KEY (owner_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
     }
 }

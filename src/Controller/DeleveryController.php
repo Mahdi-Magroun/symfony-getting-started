@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-use App\Service\deleveryService;
+use App\Service\DeleveryService;
 use App\Entity\Farm;
 use App\Entity\Order;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,7 +28,7 @@ class DeleveryController extends AbstractController
      /**
      * @Route("/app/delevery/order", name="delevery/order")
      */
-    public function DeleveryOrder(deleveryService $deleveryService)
+    public function DeleveryOrder(DeleveryService $deleveryService)
     {
  
         return $this->render('delevery/order.html.twig',['farms'=>$deleveryService->getAllOrders()]);

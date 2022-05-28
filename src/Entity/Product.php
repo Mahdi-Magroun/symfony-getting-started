@@ -22,7 +22,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity=Farm::class, inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false,onDelete="CASCADE")
      */
     private $Farm;
 
