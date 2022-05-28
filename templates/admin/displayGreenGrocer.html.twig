@@ -20,7 +20,6 @@
        <th scope="col">NOM</th>
        <th scope="col">LOCATION</th>
        <th scope="col">OWNER</th>
-        <th scope="col">display product</th>
         <th scope="col">detail</th>
         <th scope="col">Ban Farm </th>
         <th scope="col">delete</th>
@@ -35,9 +34,12 @@
        <td>{{ f.getGreenGrocerName() }}</td>
        <td>{{ f.getLocation() }}</td>
        <td>{{ f.getOwnerId().getUserName()}}</td>
-       <td><a class="btn btn-primary " >view products </a></td>
        <td><a class="btn btn-info ">detail</a></td>
-       <td><a class="btn btn-warning ">Ban </a></td>
+       {% if f.getOwnerId().getAccount().isIsBaned() %}
+       <td><a class="btn btn-warning" href="{{path('app_admin/greengrocer/allow',{'id':f.getId()})}}"> Baned </a></td>
+         {% else %}
+         <td><a class="btn btn-success " href="{{path('app_admin/greengrocer/ban',{'id':f.getId()})}}">Allowed </a></td>
+       {% endif %}
        <td><a class="btn btn-danger " href="{{path('app_admin/deleteGreenGrocer',{'id':f.getId()})}}">delete</a></td>
       
      </tr>

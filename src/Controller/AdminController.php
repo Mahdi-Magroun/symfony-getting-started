@@ -75,6 +75,22 @@ class AdminController extends AbstractController
     }
 
      /**
+     * @Route("/app/admin/greengrocer/ban/{id}", name="app_admin/greengrocer/ban")
+     */
+    public function banGreenGrocer(int $id){
+        $this->adminService->banGreenGrocer($id); 
+        return $this->redirectToRoute('app_admin/greengrocer');
+    }
+
+     /**
+     * @Route("/app/admin/greengrocer/allow/{id}", name="app_admin/greengrocer/allow")
+     */
+    public function allowGreengrocer(int $id){
+        $this->adminService->allowGreenGrocer($id);
+        return $this->redirectToRoute('app_admin/greengrocer');
+    }
+
+     /**
      * @Route("/app/admin/farmer/{id}/products", name="app_admin/farmer/products")
      */
     public function farmProduct(int $id){ 

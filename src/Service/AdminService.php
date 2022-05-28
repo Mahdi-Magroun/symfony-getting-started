@@ -67,9 +67,28 @@ class AdminService
         $this->entityManager->flush();
     }
 
+    public function banGreenGrocer($id){
+        $greenGrocer=$this->entityManager->getRepository(Greengrocer::class)->find($id);
+        $user = $greenGrocer->getOwnerId();
+       
+        $account=$user->getAccount();
+        $account->setIsBaned(true);
+        $this->entityManager->persist($account);
+        $this->entityManager->flush();
+    }
+
     public function allowFarm($id){
         $farm=$this->entityManager->getRepository(Farm::class)->find($id);
         $user = $farm->getOwner();
+       
+        $account=$user->getAccount();
+        $account->setIsBaned(false);
+        $this->entityManager->persist($account);
+        $this->entityManager->flush();
+    }
+    public function allowGreenGrocer($id){
+        $greengrocer=$this->entityManager->getRepository(Greengrocer::class)->find($id);
+        $user = $greengrocer->getOwnerId();
        
         $account=$user->getAccount();
         $account->setIsBaned(false);
@@ -91,10 +110,6 @@ class AdminService
     }
 
     
-
-    public function banGreenGrocer($idFarm){
-
-    }
 
     public function displayBannedFarm(){
 
