@@ -35,7 +35,7 @@ public function indexAction()
 
     if($this->isGranted('ROLE_FARMER')){
         $user=$this->getUser();
-        if($user->getAccount()->isIsBaned()){
+        if($user->getAccount()->isIsBaned()||$user->getAccount()->isIsActivated()==false){
             
             return $this->redirectToRoute('app_logout');
         }
@@ -46,7 +46,7 @@ public function indexAction()
     elseif($this->isGranted('ROLE_GREENGROCER'))
     {
         $user=$this->getUser();
-        if($user->getAccount()->isIsBaned()){
+        if($user->getAccount()->isIsBaned()||  $user->getAccount()->isIsActivated()==false){
             
             return $this->redirectToRoute('app_logout');
         }

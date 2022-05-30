@@ -1,0 +1,24 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+
+<h2>Info</h2>
+farm name ={{farm.getFarmName()}}<br>
+farm discription = {{farm.getDiscription()}}<br>
+location ={{farm.getLoacation()}}<br>
+user mail = {{farm.getOwner().getEmail()}}<br>
+<h2>assets</h2>
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+        {% for pic in farm.getOwner().getProves() %}
+        <figure class="figure">
+            <img src="{{ asset('public/'~pic.getUrl())}}" class="figure-img img-fluid rounded" width="500" height="500" alt="...">
+            <figcaption class="figure-caption">prove </figcaption>
+          </figure>
+    
+{% endfor %}
+</div>
+</div>
+      
