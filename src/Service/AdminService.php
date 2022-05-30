@@ -5,6 +5,8 @@ use App\Entity\Account;
 use App\Entity\Farm;
 use App\Entity\User;
 use App\Entity\Greengrocer;
+use App\Entity\Order;
+use App\Entity\Product;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 
@@ -18,6 +20,81 @@ class AdminService
         $this->entityManager=$doctrine->getManager();
         $this->user=$security->getUser();
     }
+
+
+
+    public function getUsefullDataForAdmin(){ // account , order , users
+        //request 
+         // how many banned user 
+         $totaleBaned= count($this->entityManager->getRepository(Account::class)->findBy(['isBaned'=>true]));
+      // how many request 
+        $totaleRequest= count($this->entityManager->getRepository(Account::class)->findBy(['isActivated'=>false]));
+        // active Account
+        $totaleActive= count($this->entityManager->getRepository(Account::class)->findBy(['isActivated'=>true,'isBaned'=>false]));
+        // inactive accounts 
+        $totaleInActive = $totaleBaned+$totaleRequest;
+        $totaleAccount= $totaleActive+$totaleInActive;
+        $account=['totale'=>$totaleAccount,'active'=>$totaleActive,'inactive'=>$totaleInActive,'banned'=>$totaleBaned,'onHold'=>$totaleRequest];
+
+
+        // order :  // totale order , delivred order , not prepared , prepared and not delivred 
+        $totaleOrder= count($this->entityManager->getRepository(Order::class)->findAll());
+        $totaleOrderNotPrepared= count($this->entityManager->getRepository(Order::class)->findBy(['isPrepared'=>false]));
+        $totaleOrderPreparedAndNotDelivred=count($this->entityManager->getRepository(Order::class)->findBy(['isPrepared'=>true,
+        'isDelivered'=>false]));
+        $totaleOrderNotDelivred  = $totaleOrderNotPrepared+$totaleOrderPreparedAndNotDelivred;
+        $totaleDelivred = $totaleOrder-$totaleOrderNotDelivred;
+
+
+        
+        $orderInfo=['totale'=>$totaleOrder,'notPrepared'=>$totaleOrderNotPrepared,'preparedNotDelivred'=>$totaleOrderPreparedAndNotDelivred
+        ,'totaleNotDelivred'=>$totaleOrderNotDelivred,'totaleDelivred'=>$totaleDelivred];
+
+        // how many user in app 
+        $totaleUser= count($this->entityManager->getRepository(User::class)->findAll());
+        $totaleFarmer= count($this->entityManager->getRepository(User::class)->findUsersByRole("ROLE_FARMER"));
+        $totaleGreengrocer= count($this->entityManager->getRepository(User::class)->findUsersByRole("ROLE_GREENGROCER"));
+        $totaleDelevery= count($this->entityManager->getRepository(User::class)->findUsersByRole("ROLE_DELEVERY"));
+        $totaleAdmin= count($this->entityManager->getRepository(User::class)->findUsersByRole("ROLE_ADMIN"));
+       $userInfo=['totale'=>$totaleUser,'totaleFarmer'=>$totaleFarmer,'totaleGreengrocer'=>$totaleGreengrocer
+       ,'totaleDelevery'=>$totaleDelevery,'totaleAdmin'=>$totaleAdmin];
+    
+
+       
+        // benefits 
+        $totaleOrder=$this->entityManager->getRepository(Order::class)->findAll();
+        $benefits = 0;
+        foreach ($totaleOrder as $order) {
+             foreach ($order->getItems() as $item) {
+                 $benefits=$benefits+$item->getPrice();
+             }
+        }
+        $benefits= $benefits/1000*0.2;
+        
+
+         // totale products 
+         $totaleProducts=count($this->entityManager->getRepository(Product::class)->findAll());
+
+
+        $data = ['account'=>$account,'user'=>$userInfo,'order'=>$orderInfo,'benifits'=>$benefits,'totaleProducts'=>$totaleProducts];
+       return $data;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -153,7 +230,7 @@ class AdminService
     public function acceptGreenGrocerRequest($id){
         $gg=$this->entityManager->getRepository(Greengrocer::class)->find($id);
         $account=$gg->getOwnerId()->getAccount();
-        $account->setIsActivated(true);
+        $account->setIsActivated    (true);
         $this->entityManager->persist($account);
         $this->entityManager->flush();
     }

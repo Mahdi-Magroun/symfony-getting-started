@@ -22,28 +22,22 @@ class UserFixture extends Fixture
     {
       
        
-       /* for($i=2;$i<10;$i++){
+       for($i=2;$i<10;$i++){
             $user = new User();
             $account = new Account();
-            $account->setIsActivated(false);
-            $account->setIsBaned(false);
+            $account->setIsActivated(true);
+            $account->setIsBaned(true);
             $user->setAccount($account);
-            $user->setEmail("farmer".$i."@gmail.com");
+            $user->setEmail("delevery".$i."@gmail.com");
             $user->setPassword($this->hasher->hashPassword(
                 $user,"0101"));
-            $user->setRoles(['ROLE_FARMER']);
+            $user->setRoles(['ROLE_DELEVERY']);
             $manager->persist($user);
-            $farm=new Farm();
-            $farm->setOwner($user);
-            $farm->setFarmName('farm '.$i);
-            $farm->setLoacation('location '.$i);
             
-            
-         $manager->persist($farm);
 
         
         }
          $manager->flush();
-     */
+    
     }
 }
