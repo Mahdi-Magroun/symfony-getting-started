@@ -29,8 +29,8 @@ class FarmController extends AbstractController
     */
    public function Farmerindex()
    {
-    
-       return  new Response("<h1> index for farmer man<h1>"); 
+        
+       return  $this->render('farmer/index.html.twig',['data'=>$this->farmService->getUtilInfoForIndex()]);
    }
 
   

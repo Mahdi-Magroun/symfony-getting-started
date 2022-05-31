@@ -11,12 +11,55 @@ class FarmService{
 
     private $entityManager;
     private $user;
+    private $farm ; 
 
     public function __construct(ManagerRegistry $doctrine,Security $security){
         $this->entityManager=$doctrine->getManager();
         $this->user=$security->getUser();
+        $this->farm=$this->user->getMyfarm();
+
         
     }
+
+
+
+
+    public function getUtilInfoForIndex(){
+// get all order 
+        // prepare order 
+        // not prepared order 
+        // delivred order 
+
+        $totale=count($this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm]));
+        $notPrepared=count($this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm,'isPrepared'=>false]));
+        $preparedNotDelivred=count($this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm
+        ,'isPrepared'=>true,'isDelivered'=>false
+    ])); 
+    $delivred=count($this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm,'isDelivered'=>true]));
+    $notDelivred=count($this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm,'isDelivered'=>false  ]));
+    $order=['totale'=>$totale,'notPrepared'=>$notPrepared,'preparedNotDelivered'=>$preparedNotDelivred,'delivred'=>$delivred,'notDelivered'=>$notDelivred]; 
+    
+     // gains ===> should be on delivered order not all order 
+    $orders=$this->entityManager->getRepository(Order::class)->findBy(['farm'=>$this->farm,'status'=>'order']);
+    $benifits= 0 ;
+    foreach ($orders as $od) {
+
+    foreach ($od->getItems() as $item ) {
+        $benifits=$benifits+$item->getPrice();
+    }
+}
+    $benifits=$benifits*0.65/1000;
+
+    $product= count($this->entityManager->getRepository(Product::class)->findBy(['Farm'=>$this->farm]));
+
+
+    $data=['order'=>$order,'benifits'=>$benifits,'products'=>$product];
+    return $data;
+
+    }
+
+
+
 
     public function getCurentFarm(  ){
       return  $farm=$this->entityManager->getRepository(Farm::class)->findOneBy(['owner'=>$this->user]);
