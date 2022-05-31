@@ -1,21 +1,22 @@
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-{% block title %}Register{% endblock %}
+
 
 {% block body %}
     <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
-    {{ form_row(registrationForm.propertyName) }}
-    {{ form_row(registrationForm.propertyDiscription) }}
-    {{ form_row(registrationForm.propertyLocation) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword)}}
-        {{ form_row(registrationForm.role) }}
-        {{ form_row(registrationForm.image) }}
+    {{ form_start(registrationForm) }}<br>
+    {{ form_row(registrationForm.propertyName) }}<br>
+    {{ form_row(registrationForm.propertyDiscription) }}<br>
+    {{ form_row(registrationForm.propertyLocation) }}<br>
+    {{ form_row(registrationForm.email) }}<br>
+    {{ form_row(registrationForm.plainPassword)}}<br>
+    {{ form_row(registrationForm.role) }}<br><bR>
+    {{ form_row(registrationForm.image) }}<br><br>
         
 
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_row(registrationForm.agreeTerms) }}<br><br>
        
        
         <button type="submit" class="btn">Register</button>

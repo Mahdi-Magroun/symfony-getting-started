@@ -1,0 +1,31 @@
+{% extends "base.html.twig" %}
+ {% block body %}
+    
+
+<div class="container ">
+    <div class="row m-3">
+         <div class="alert alert-success w-25 row m-5" role="alert">
+    <h4 class="alert-heading">Recived order </h4>
+    <p> you have {{data.delivered}} recived order !!  </p>
+    <hr>
+    
+  </div>
+<div class="alert alert-info w-25 row m-5" role="alert">
+    <h4 class="alert-heading">totale order </h4>
+    <p>you have made : {{data.totale}} order</p>
+    <hr>
+    
+  </div>
+
+ 
+
+  <div class="alert alert-warning w-25 row m-5" role="alert">
+    <h4 class="alert-heading"> non recived order </h4>
+    <p>you have {{data.notDelivered}} non delivered order</p>
+    <hr>
+</div>
+  </div>
+  
+  </div>
+
+  {% endblock body %} 

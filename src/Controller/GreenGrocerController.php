@@ -27,18 +27,17 @@ class GreenGrocerController extends AbstractController
      */
     public function GreenGrocerindex(ManagerRegistry $doctrine, UserPasswordHasherInterface $userPasswordHasher)
     {
-       /* $user=new User();
         $entityManager=$doctrine->getManager();
-        $user->setEmail('delevery1@gmail.com');
-        $user->setRoles(['ROLE_DELEVERY']);
-       
-        $user->setPassword($userPasswordHasher->hashPassword(
-            $user,"0101"));
-        
-        $entityManager->persist($user);
-        $entityManager->flush();
-*/
-        return  new Response( "<h1>index for green grocer</h1>");
+        $greengrocer = $this->getUser()->getGreengrocer();
+        $totale=count($entityManager->getRepository(Order::class)->findBy(['greengrocer'=>$greengrocer,'status'=>'order']));
+        $delivered=count($entityManager->getRepository(Order::class)->findBy(['greengrocer'=>$greengrocer,'status'=>'order','isDelivered'=>true]));
+        $notdelivered = $totale-$delivered;
+        $order=['totale'=>$totale,'delivered'=>$delivered,'notDelivered'=>$notdelivered];
+  
+
+
+
+        return  $this->render('greengrocer/index.html.twig',['data'=>$order]);
     }
 
 
