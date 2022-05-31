@@ -28,10 +28,10 @@ class UserFixture extends Fixture
             $account->setIsActivated(true);
             $account->setIsBaned(true);
             $user->setAccount($account);
-            $user->setEmail("delevery".$i."@gmail.com");
+            $user->setEmail("admin".$i."@gmail.com");
             $user->setPassword($this->hasher->hashPassword(
                 $user,"0101"));
-            $user->setRoles(['ROLE_DELEVERY']);
+            $user->setRoles(['ROLE_ADMIN']);
             $manager->persist($user);
             
 

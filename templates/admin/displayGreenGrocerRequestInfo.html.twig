@@ -1,5 +1,9 @@
 {% extends "main/baseAdmin.html.twig" %}
 
+{% block body %}
+    
+
+
 <h2>Info</h2>
 greengrocer name ={{greengrocer.getGreengrocerName()}}<br>
 greengrocer discription = {{greengrocer.getDiscription()}}<br>
@@ -19,4 +23,4 @@ user mail = {{greengrocer.getOwnerId().getEmail()}}<br>
 {% endfor %}
 </div>
 </div>
-      
+{% endblock name %}

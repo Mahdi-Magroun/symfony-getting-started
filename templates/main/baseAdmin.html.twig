@@ -27,32 +27,37 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{{path("app_admin")}}">Home</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ path("greengrocer/farms") }}">farms</a>
-                  </li>
+                  
+
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                     manage products 
+                     manage Requests 
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <li><a class="dropdown-item" href="{{path("farmer/products")}}"> my products </a></li>
-                      <li><a class="dropdown-item" href="{{path("farmer/products/add")}}"> add product </a></li>
+                      <li><a class="dropdown-item" href="{{path("app_admin/farm/request")}}"> Farm Requests </a></li>
+                      <li><a class="dropdown-item" href="{{path("app_admin/greengrocer/request")}}"> greengrocer Requests </a></li>
                     </ul>
                   </li>
+
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      manage order
+                      manage accounts
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{path("farmer/order")}}">curent order </a></li>
-                      <li><a class="dropdown-item" href="{{path("farmer/delivredOrder")}}"> delivred orders</a></li>
-                      <li><a class="dropdown-item" href="{{path("farmer/orderNotPrepared")}}"> not prepared</a></li>
+                      <li><a class="dropdown-item" href="{{path("app_admin/farms")}}"> farmer's account</a></li>
+                      <li><a class="dropdown-item" href="{{path("app_admin/greengrocer")}}"> greengrocer's account</a></li>
                    
                     </ul>
                   </li>
+                  
                 </ul>
+                <div class="flex-row-reverse " >
+                <li class="nav-item float-start" >
+                    <a class="nav-link active btn btn-warning" aria-current="page" href="{{path("app_logout")}}">log out</a>
+                  </li>
+                  </div>
               </div>
             </div>
           </nav>

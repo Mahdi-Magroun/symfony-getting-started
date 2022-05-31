@@ -1,18 +1,30 @@
 {% extends "main/baseAdmin.html.twig" %}
+{% block body %}
+    <div class="m-9">
+<div class="card text-center w-50  ">
+    <div class="card-header">
+      Info 
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"><p>farm name   :  {{farm.getFarmName()}}</p><br></h5>
+      <p class="card-text">farm discription  : {{farm.getDiscription()}}</p><hr>
+      <p class="card-text">location  : {{farm.getLoacation()}}</p><hr>
+      <p class="card-text">user mail  : {{farm.getOwner().getEmail()}}</p><hr>
+    </div>
+    <div class="card-footer text-muted">
+     
+    </div>
+  </div>
+  </div>
 
-<h2>Info</h2>
-farm name ={{farm.getFarmName()}}<br>
-farm discription = {{farm.getDiscription()}}<br>
-location ={{farm.getLoacation()}}<br>
-user mail = {{farm.getOwner().getEmail()}}<br>
-<h2>assets</h2>
-<div class="container">
-
+  <h2>assets</h2><br>
+<div class="container d-flex justify-content-center">
+    
     <div class="row">
         <div class="col">
         {% for pic in farm.getOwner().getProves() %}
-        <figure class="figure">
-            <img src="{{ asset('public/'~pic.getUrl())}}" class="figure-img img-fluid rounded" width="500" height="500" alt="...">
+        <figure class="figure w-25">
+            <img src="{{ asset('public/'~pic.getUrl())}}" class="figure-img img-fluid rounded"  alt="...">
             <figcaption class="figure-caption">prove </figcaption>
           </figure>
     
@@ -20,3 +32,4 @@ user mail = {{farm.getOwner().getEmail()}}<br>
 </div>
 </div>
       
+{% endblock body %}
