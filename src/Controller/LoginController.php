@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
     /**
-     * @Route("/app/login", name="app_login")
+     * @Route("/", name="app_login")
      */
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
@@ -68,7 +68,7 @@ public function indexAction()
     {
         // controller can be blank: it will never be called!
         throw new \Exception('Don\'t forget to activate logout in security.yaml');
-        return $this->redirectToRoute('app_login');
+        
     }
 
     }

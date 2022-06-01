@@ -120,7 +120,15 @@ class AdminService
     }
 
     public function displayGreenGrocer(){
-        return $this->entityManager->getRepository(Greengrocer::class)->findAll();
+        $accounts =$this->entityManager->getRepository(Account::class)->findBy(['isActivated'=>true
+    ]);
+    $greenGrocer=array();
+    foreach ($accounts as $account) {
+        if( in_array('ROLE_GREENGROCER',$account->getUser()->getRoles()))
+        array_push($greenGrocer,$account->getUser()->getGreengrocer());
+    }
+    return $greenGrocer;
+        //return $this->entityManager->getRepository(Greengrocer::class)->findAll();
     }
 
     public function displayGreenGrocerInfo(){
